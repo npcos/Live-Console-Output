@@ -10,3 +10,6 @@ Whenever there is a change to the directory containing that executable, it is re
 
 Usage:
 `dotnet LiveConsoleOutput.dll my-project-output.exe args`
+
+When provided with a dll, it will use dotnet to execute it:
+`dotnet LiveConsoleOutput.dll my-dotnet-core-project-output.dll args`

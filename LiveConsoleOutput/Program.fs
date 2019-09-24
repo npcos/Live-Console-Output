@@ -6,12 +6,16 @@ open System.IO
 open System.Reactive.Linq
 open RxFileSystemWatcher
 
+let startProcess (projectExe:String) args =
+    if String.Equals(Path.GetExtension(projectExe), ".dll", StringComparison.InvariantCultureIgnoreCase)
+    then Process.Start("dotnet", String.Join (" ", projectExe::args))
+    else Process.Start (projectExe, String.Join (" ", args))
+
 let watchApp projectExe (args:string list) =
     Console.Clear()
     printf "Watching console output for %s\n" projectExe
 
-    let argStr = String.Join (" ", args)
-    let p = Process.Start (projectExe, argStr)
+    let p = startProcess projectExe args
 
     let dir = Path.GetDirectoryName projectExe
     use fsw = new FileSystemWatcher(dir)
@@ -23,7 +27,7 @@ let watchApp projectExe (args:string list) =
         printf "Detected change! Running again...\n"
 
         if not lastRun.HasExited then lastRun.Kill()
-        Process.Start (projectExe, argStr)
+        startProcess projectExe args
     
     let toUnits (obs:IObservable<'a>) = obs.Select(fun _ -> ())
 

@@ -13,11 +13,12 @@ let startProcess (projectExe:String) args =
 
 let watchApp projectExe (args:string list) =
     Console.Clear()
-    printf "Watching console output for %s\n" projectExe
+    let dir = Path.GetDirectoryName (Path.GetFullPath projectExe)
+    printfn "Watching directory for changes in %s" dir
+    printfn "And showing console output for %s" (Path.GetFileName projectExe)
 
     let p = startProcess projectExe args
 
-    let dir = Path.GetDirectoryName projectExe
     use fsw = new FileSystemWatcher(dir)
     use rxFsw = new ObservableFileSystemWatcher(fsw)
     fsw.EnableRaisingEvents <- true
